@@ -1,0 +1,83 @@
+syntax = "proto2";
+
+package portal;
+
+service Portal {
+  // Sender
+  rpc SendSession(SessionRequest) returns (stream SendSessionState) {}
+  rpc Put(stream PutFrame) returns (PutResponse) {}
+  
+  // Client
+  rpc ReceiveSession(SessionRequest) returns (stream ReceiveSessionState) {}
+  rpc Get(GetRequest) returns (stream GetFrame) {}
+}
+
+enum SessionStateType {
+  WAIT   = 0;
+  ACTIVE = 1;
+}
+
+enum SessionType {
+  SEND    = 1;
+  SYNC    = 2;
+  RECEIVE = 3;
+}
+
+enum FrameType {
+  HEADER = 0;
+  CHUNK  = 1;
+}
+
+message SessionRequest {
+  optional SessionType type   = 1;
+  
+  optional string secret = 2;
+  optional string token  = 3;
+}
+
+message SendSessionState {
+  optional SessionStateType state = 1;
+
+  optional string token       = 2;
+  optional string remoteIP    = 3;
+  optional int32  chunkSize   = 4;
+  optional int32  maxFileSize = 5;
+}
+
+message FileInfo {
+  optional string path     = 1;
+  optional int64  size     = 2;
+  optional uint32 mode     = 3;
+  optional string mimetype = 4;
+  optional bool   isDir    = 5;
+}
+
+message PutFrame {
+  optional FrameType type = 1;
+
+  // type = HEADER
+  optional FileInfo fileInfo = 2;
+
+  // type = CHUNK
+  optional bytes data = 3;
+}
+
+message PutResponse {}
+
+message ReceiveSessionState {
+  optional SessionStateType type = 1;
+}
+
+message GetRequest {}
+
+message GetFrame {
+  optional FrameType type = 1;
+  optional int64     id   = 2;
+
+  // type = HEADER
+  optional FileInfo fileInfo = 3;
+
+  // type = CHUNK
+  optional bytes data = 4;
+}
+
