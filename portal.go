@@ -1,15 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/codegangsta/cli"
+
+	"github.com/njpatel/portal/receive"
+	"github.com/njpatel/portal/send"
+	"github.com/njpatel/portal/server"
 )
 
 var (
+	address  string
 	author   = cli.Author{Name: "Neil Jagdish Patel", Email: "njpatel@gmail.com"}
-	server   string
+	force    bool
 	insecure bool
 	secret   string
 	version  string
@@ -18,16 +22,24 @@ var (
 func main() {
 	app := cli.NewApp()
 	app.Name = "portal"
+	app.Usage = "Easily send one or more files from A to B. https://github.com/njpatel/portal"
 	app.Version = version
 	app.Authors = []cli.Author{author}
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:        "server, s",
+			Name:        "address, a",
 			Value:       "portal.njp.io:3421",
-			Usage:       "portal server hostname",
-			Destination: &server,
+			Usage:       "portal server address",
+			Destination: &address,
 			EnvVar:      "PORTAL_HOST",
+		},
+
+		cli.BoolFlag{
+			Name:        "force, f",
+			Usage:       "overwrite files",
+			Destination: &force,
+			EnvVar:      "PORTAL_FORCE",
 		},
 
 		cli.BoolFlag{
@@ -48,48 +60,48 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
-			Name:  "serve",
+			Name:  "server",
 			Usage: "start the portal server",
 			Action: func(c *cli.Context) {
-				fmt.Println("Serve!")
+				server.Run(&server.Config{
+					Address: address,
+					Secret:  secret,
+				})
 			},
 		},
 		{
 			Name:  "send",
-			Usage: "send <file1> [file2] [file3]",
+			Usage: "<file1> [file2] [file3]",
 			Action: func(c *cli.Context) {
-				if len(c.Args()) == 0 {
-					fmt.Println("Need at least one file to send")
-					return
-				}
-				for _, f := range c.Args() {
-					fmt.Println("Sending " + f)
-				}
+				send.Run(&send.Config{
+					Address:  address,
+					Insecure: insecure,
+					Secret:   secret,
+				}, c.Args())
 			},
 		},
 		{
 			Name:  "sync",
-			Usage: "sync <file1> [file2] [file3]",
+			Usage: "<file1> [file2] [file3]",
 			Action: func(c *cli.Context) {
-				if len(c.Args()) == 0 {
-					fmt.Println("Need at least one file to sync")
-					return
-				}
-				for _, f := range c.Args() {
-					fmt.Println("Sending " + f)
-				}
+				send.RunSync(&send.Config{
+					Address:  address,
+					Insecure: insecure,
+					Secret:   secret,
+				}, c.Args())
 			},
 		},
 		{
 			Name:    "receive",
 			Aliases: []string{"get"},
-			Usage:   "receive <token> <output dir=./>",
+			Usage:   "<token> <output dir=./>",
 			Action: func(c *cli.Context) {
-				if len(c.Args()) < 1 {
-					fmt.Println("Need the <token> and <output dir>")
-					return
-				}
-				fmt.Printf("token:%s output:%s\n", c.Args().First(), c.Args().Get(1))
+				receive.Run(&receive.Config{
+					Address:  address,
+					Insecure: insecure,
+					Secret:   secret,
+					Force:    force,
+				}, c.Args().Get(0), c.Args().Get(1))
 			},
 		},
 	}

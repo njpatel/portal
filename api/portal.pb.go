@@ -9,12 +9,9 @@ It is generated from these files:
 	api/portal.proto
 
 It has these top-level messages:
-	SessionRequest
-	SendSessionState
 	FileInfo
 	PutFrame
 	PutResponse
-	ReceiveSessionState
 	GetRequest
 	GetFrame
 */
@@ -54,60 +51,10 @@ var SessionStateType_value = map[string]int32{
 	"ACTIVE": 1,
 }
 
-func (x SessionStateType) Enum() *SessionStateType {
-	p := new(SessionStateType)
-	*p = x
-	return p
-}
 func (x SessionStateType) String() string {
 	return proto.EnumName(SessionStateType_name, int32(x))
 }
-func (x *SessionStateType) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(SessionStateType_value, data, "SessionStateType")
-	if err != nil {
-		return err
-	}
-	*x = SessionStateType(value)
-	return nil
-}
 func (SessionStateType) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
-
-type SessionType int32
-
-const (
-	SessionType_SEND    SessionType = 1
-	SessionType_SYNC    SessionType = 2
-	SessionType_RECEIVE SessionType = 3
-)
-
-var SessionType_name = map[int32]string{
-	1: "SEND",
-	2: "SYNC",
-	3: "RECEIVE",
-}
-var SessionType_value = map[string]int32{
-	"SEND":    1,
-	"SYNC":    2,
-	"RECEIVE": 3,
-}
-
-func (x SessionType) Enum() *SessionType {
-	p := new(SessionType)
-	*p = x
-	return p
-}
-func (x SessionType) String() string {
-	return proto.EnumName(SessionType_name, int32(x))
-}
-func (x *SessionType) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(SessionType_value, data, "SessionType")
-	if err != nil {
-		return err
-	}
-	*x = SessionType(value)
-	return nil
-}
-func (SessionType) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 type FrameType int32
 
@@ -125,175 +72,37 @@ var FrameType_value = map[string]int32{
 	"CHUNK":  1,
 }
 
-func (x FrameType) Enum() *FrameType {
-	p := new(FrameType)
-	*p = x
-	return p
-}
 func (x FrameType) String() string {
 	return proto.EnumName(FrameType_name, int32(x))
 }
-func (x *FrameType) UnmarshalJSON(data []byte) error {
-	value, err := proto.UnmarshalJSONEnum(FrameType_value, data, "FrameType")
-	if err != nil {
-		return err
-	}
-	*x = FrameType(value)
-	return nil
-}
-func (FrameType) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
-
-type SessionRequest struct {
-	Type             *SessionType `protobuf:"varint,1,opt,name=type,enum=portal.SessionType" json:"type,omitempty"`
-	Secret           *string      `protobuf:"bytes,2,opt,name=secret" json:"secret,omitempty"`
-	Token            *string      `protobuf:"bytes,3,opt,name=token" json:"token,omitempty"`
-	XXX_unrecognized []byte       `json:"-"`
-}
-
-func (m *SessionRequest) Reset()                    { *m = SessionRequest{} }
-func (m *SessionRequest) String() string            { return proto.CompactTextString(m) }
-func (*SessionRequest) ProtoMessage()               {}
-func (*SessionRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
-
-func (m *SessionRequest) GetType() SessionType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return SessionType_SEND
-}
-
-func (m *SessionRequest) GetSecret() string {
-	if m != nil && m.Secret != nil {
-		return *m.Secret
-	}
-	return ""
-}
-
-func (m *SessionRequest) GetToken() string {
-	if m != nil && m.Token != nil {
-		return *m.Token
-	}
-	return ""
-}
-
-type SendSessionState struct {
-	State            *SessionStateType `protobuf:"varint,1,opt,name=state,enum=portal.SessionStateType" json:"state,omitempty"`
-	Token            *string           `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
-	RemoteIP         *string           `protobuf:"bytes,3,opt,name=remoteIP" json:"remoteIP,omitempty"`
-	ChunkSize        *int32            `protobuf:"varint,4,opt,name=chunkSize" json:"chunkSize,omitempty"`
-	MaxFileSize      *int32            `protobuf:"varint,5,opt,name=maxFileSize" json:"maxFileSize,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
-}
-
-func (m *SendSessionState) Reset()                    { *m = SendSessionState{} }
-func (m *SendSessionState) String() string            { return proto.CompactTextString(m) }
-func (*SendSessionState) ProtoMessage()               {}
-func (*SendSessionState) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
-
-func (m *SendSessionState) GetState() SessionStateType {
-	if m != nil && m.State != nil {
-		return *m.State
-	}
-	return SessionStateType_WAIT
-}
-
-func (m *SendSessionState) GetToken() string {
-	if m != nil && m.Token != nil {
-		return *m.Token
-	}
-	return ""
-}
-
-func (m *SendSessionState) GetRemoteIP() string {
-	if m != nil && m.RemoteIP != nil {
-		return *m.RemoteIP
-	}
-	return ""
-}
-
-func (m *SendSessionState) GetChunkSize() int32 {
-	if m != nil && m.ChunkSize != nil {
-		return *m.ChunkSize
-	}
-	return 0
-}
-
-func (m *SendSessionState) GetMaxFileSize() int32 {
-	if m != nil && m.MaxFileSize != nil {
-		return *m.MaxFileSize
-	}
-	return 0
-}
+func (FrameType) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 type FileInfo struct {
-	Path             *string `protobuf:"bytes,1,opt,name=path" json:"path,omitempty"`
-	Size             *int64  `protobuf:"varint,2,opt,name=size" json:"size,omitempty"`
-	Mode             *uint32 `protobuf:"varint,3,opt,name=mode" json:"mode,omitempty"`
-	Mimetype         *string `protobuf:"bytes,4,opt,name=mimetype" json:"mimetype,omitempty"`
-	IsDir            *bool   `protobuf:"varint,5,opt,name=isDir" json:"isDir,omitempty"`
-	XXX_unrecognized []byte  `json:"-"`
+	Path     string `protobuf:"bytes,1,opt,name=path" json:"path,omitempty"`
+	Size     int64  `protobuf:"varint,2,opt,name=size" json:"size,omitempty"`
+	Mode     uint32 `protobuf:"varint,3,opt,name=mode" json:"mode,omitempty"`
+	Mimetype string `protobuf:"bytes,4,opt,name=mimetype" json:"mimetype,omitempty"`
+	IsDir    bool   `protobuf:"varint,5,opt,name=isDir" json:"isDir,omitempty"`
 }
 
 func (m *FileInfo) Reset()                    { *m = FileInfo{} }
 func (m *FileInfo) String() string            { return proto.CompactTextString(m) }
 func (*FileInfo) ProtoMessage()               {}
-func (*FileInfo) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
-
-func (m *FileInfo) GetPath() string {
-	if m != nil && m.Path != nil {
-		return *m.Path
-	}
-	return ""
-}
-
-func (m *FileInfo) GetSize() int64 {
-	if m != nil && m.Size != nil {
-		return *m.Size
-	}
-	return 0
-}
-
-func (m *FileInfo) GetMode() uint32 {
-	if m != nil && m.Mode != nil {
-		return *m.Mode
-	}
-	return 0
-}
-
-func (m *FileInfo) GetMimetype() string {
-	if m != nil && m.Mimetype != nil {
-		return *m.Mimetype
-	}
-	return ""
-}
-
-func (m *FileInfo) GetIsDir() bool {
-	if m != nil && m.IsDir != nil {
-		return *m.IsDir
-	}
-	return false
-}
+func (*FileInfo) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
 type PutFrame struct {
-	Type *FrameType `protobuf:"varint,1,opt,name=type,enum=portal.FrameType" json:"type,omitempty"`
+	Type FrameType `protobuf:"varint,1,opt,name=type,enum=portal.FrameType" json:"type,omitempty"`
+	Id   int64     `protobuf:"varint,2,opt,name=id" json:"id,omitempty"`
 	// type = HEADER
-	FileInfo *FileInfo `protobuf:"bytes,2,opt,name=fileInfo" json:"fileInfo,omitempty"`
+	FileInfo *FileInfo `protobuf:"bytes,3,opt,name=fileInfo" json:"fileInfo,omitempty"`
 	// type = CHUNK
-	Data             []byte `protobuf:"bytes,3,opt,name=data" json:"data,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Data []byte `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (m *PutFrame) Reset()                    { *m = PutFrame{} }
 func (m *PutFrame) String() string            { return proto.CompactTextString(m) }
 func (*PutFrame) ProtoMessage()               {}
-func (*PutFrame) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
-
-func (m *PutFrame) GetType() FrameType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return FrameType_HEADER
-}
+func (*PutFrame) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
 
 func (m *PutFrame) GetFileInfo() *FileInfo {
 	if m != nil {
@@ -302,76 +111,41 @@ func (m *PutFrame) GetFileInfo() *FileInfo {
 	return nil
 }
 
-func (m *PutFrame) GetData() []byte {
-	if m != nil {
-		return m.Data
-	}
-	return nil
-}
-
 type PutResponse struct {
-	XXX_unrecognized []byte `json:"-"`
+	Type SessionStateType `protobuf:"varint,1,opt,name=type,enum=portal.SessionStateType" json:"type,omitempty"`
+	// type = WAIT
+	Token string `protobuf:"bytes,2,opt,name=token" json:"token,omitempty"`
+	// type = ACTIVE
+	RemoteIP string `protobuf:"bytes,3,opt,name=remoteIP" json:"remoteIP,omitempty"`
 }
 
 func (m *PutResponse) Reset()                    { *m = PutResponse{} }
 func (m *PutResponse) String() string            { return proto.CompactTextString(m) }
 func (*PutResponse) ProtoMessage()               {}
-func (*PutResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
-
-type ReceiveSessionState struct {
-	Type             *SessionStateType `protobuf:"varint,1,opt,name=type,enum=portal.SessionStateType" json:"type,omitempty"`
-	XXX_unrecognized []byte            `json:"-"`
-}
-
-func (m *ReceiveSessionState) Reset()                    { *m = ReceiveSessionState{} }
-func (m *ReceiveSessionState) String() string            { return proto.CompactTextString(m) }
-func (*ReceiveSessionState) ProtoMessage()               {}
-func (*ReceiveSessionState) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{5} }
-
-func (m *ReceiveSessionState) GetType() SessionStateType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return SessionStateType_WAIT
-}
+func (*PutResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
 
 type GetRequest struct {
-	XXX_unrecognized []byte `json:"-"`
+	Token string `protobuf:"bytes,1,opt,name=token" json:"token,omitempty"`
 }
 
 func (m *GetRequest) Reset()                    { *m = GetRequest{} }
 func (m *GetRequest) String() string            { return proto.CompactTextString(m) }
 func (*GetRequest) ProtoMessage()               {}
-func (*GetRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{6} }
+func (*GetRequest) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
 
 type GetFrame struct {
-	Type *FrameType `protobuf:"varint,1,opt,name=type,enum=portal.FrameType" json:"type,omitempty"`
-	Id   *int64     `protobuf:"varint,2,opt,name=id" json:"id,omitempty"`
+	Type FrameType `protobuf:"varint,1,opt,name=type,enum=portal.FrameType" json:"type,omitempty"`
+	Id   int64     `protobuf:"varint,2,opt,name=id" json:"id,omitempty"`
 	// type = HEADER
 	FileInfo *FileInfo `protobuf:"bytes,3,opt,name=fileInfo" json:"fileInfo,omitempty"`
 	// type = CHUNK
-	Data             []byte `protobuf:"bytes,4,opt,name=data" json:"data,omitempty"`
-	XXX_unrecognized []byte `json:"-"`
+	Data []byte `protobuf:"bytes,4,opt,name=data,proto3" json:"data,omitempty"`
 }
 
 func (m *GetFrame) Reset()                    { *m = GetFrame{} }
 func (m *GetFrame) String() string            { return proto.CompactTextString(m) }
 func (*GetFrame) ProtoMessage()               {}
-func (*GetFrame) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{7} }
-
-func (m *GetFrame) GetType() FrameType {
-	if m != nil && m.Type != nil {
-		return *m.Type
-	}
-	return FrameType_HEADER
-}
-
-func (m *GetFrame) GetId() int64 {
-	if m != nil && m.Id != nil {
-		return *m.Id
-	}
-	return 0
-}
+func (*GetFrame) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
 
 func (m *GetFrame) GetFileInfo() *FileInfo {
 	if m != nil {
@@ -380,24 +154,13 @@ func (m *GetFrame) GetFileInfo() *FileInfo {
 	return nil
 }
 
-func (m *GetFrame) GetData() []byte {
-	if m != nil {
-		return m.Data
-	}
-	return nil
-}
-
 func init() {
-	proto.RegisterType((*SessionRequest)(nil), "portal.SessionRequest")
-	proto.RegisterType((*SendSessionState)(nil), "portal.SendSessionState")
 	proto.RegisterType((*FileInfo)(nil), "portal.FileInfo")
 	proto.RegisterType((*PutFrame)(nil), "portal.PutFrame")
 	proto.RegisterType((*PutResponse)(nil), "portal.PutResponse")
-	proto.RegisterType((*ReceiveSessionState)(nil), "portal.ReceiveSessionState")
 	proto.RegisterType((*GetRequest)(nil), "portal.GetRequest")
 	proto.RegisterType((*GetFrame)(nil), "portal.GetFrame")
 	proto.RegisterEnum("portal.SessionStateType", SessionStateType_name, SessionStateType_value)
-	proto.RegisterEnum("portal.SessionType", SessionType_name, SessionType_value)
 	proto.RegisterEnum("portal.FrameType", FrameType_name, FrameType_value)
 }
 
@@ -408,11 +171,7 @@ var _ grpc.ClientConn
 // Client API for Portal service
 
 type PortalClient interface {
-	// Sender
-	SendSession(ctx context.Context, in *SessionRequest, opts ...grpc.CallOption) (Portal_SendSessionClient, error)
 	Put(ctx context.Context, opts ...grpc.CallOption) (Portal_PutClient, error)
-	// Client
-	ReceiveSession(ctx context.Context, in *SessionRequest, opts ...grpc.CallOption) (Portal_ReceiveSessionClient, error)
 	Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (Portal_GetClient, error)
 }
 
@@ -424,40 +183,8 @@ func NewPortalClient(cc *grpc.ClientConn) PortalClient {
 	return &portalClient{cc}
 }
 
-func (c *portalClient) SendSession(ctx context.Context, in *SessionRequest, opts ...grpc.CallOption) (Portal_SendSessionClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_Portal_serviceDesc.Streams[0], c.cc, "/portal.Portal/SendSession", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &portalSendSessionClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type Portal_SendSessionClient interface {
-	Recv() (*SendSessionState, error)
-	grpc.ClientStream
-}
-
-type portalSendSessionClient struct {
-	grpc.ClientStream
-}
-
-func (x *portalSendSessionClient) Recv() (*SendSessionState, error) {
-	m := new(SendSessionState)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func (c *portalClient) Put(ctx context.Context, opts ...grpc.CallOption) (Portal_PutClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_Portal_serviceDesc.Streams[1], c.cc, "/portal.Portal/Put", opts...)
+	stream, err := grpc.NewClientStream(ctx, &_Portal_serviceDesc.Streams[0], c.cc, "/portal.Portal/Put", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -467,7 +194,7 @@ func (c *portalClient) Put(ctx context.Context, opts ...grpc.CallOption) (Portal
 
 type Portal_PutClient interface {
 	Send(*PutFrame) error
-	CloseAndRecv() (*PutResponse, error)
+	Recv() (*PutResponse, error)
 	grpc.ClientStream
 }
 
@@ -479,10 +206,7 @@ func (x *portalPutClient) Send(m *PutFrame) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *portalPutClient) CloseAndRecv() (*PutResponse, error) {
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
+func (x *portalPutClient) Recv() (*PutResponse, error) {
 	m := new(PutResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -490,40 +214,8 @@ func (x *portalPutClient) CloseAndRecv() (*PutResponse, error) {
 	return m, nil
 }
 
-func (c *portalClient) ReceiveSession(ctx context.Context, in *SessionRequest, opts ...grpc.CallOption) (Portal_ReceiveSessionClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_Portal_serviceDesc.Streams[2], c.cc, "/portal.Portal/ReceiveSession", opts...)
-	if err != nil {
-		return nil, err
-	}
-	x := &portalReceiveSessionClient{stream}
-	if err := x.ClientStream.SendMsg(in); err != nil {
-		return nil, err
-	}
-	if err := x.ClientStream.CloseSend(); err != nil {
-		return nil, err
-	}
-	return x, nil
-}
-
-type Portal_ReceiveSessionClient interface {
-	Recv() (*ReceiveSessionState, error)
-	grpc.ClientStream
-}
-
-type portalReceiveSessionClient struct {
-	grpc.ClientStream
-}
-
-func (x *portalReceiveSessionClient) Recv() (*ReceiveSessionState, error) {
-	m := new(ReceiveSessionState)
-	if err := x.ClientStream.RecvMsg(m); err != nil {
-		return nil, err
-	}
-	return m, nil
-}
-
 func (c *portalClient) Get(ctx context.Context, in *GetRequest, opts ...grpc.CallOption) (Portal_GetClient, error) {
-	stream, err := grpc.NewClientStream(ctx, &_Portal_serviceDesc.Streams[3], c.cc, "/portal.Portal/Get", opts...)
+	stream, err := grpc.NewClientStream(ctx, &_Portal_serviceDesc.Streams[1], c.cc, "/portal.Portal/Get", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -557,11 +249,7 @@ func (x *portalGetClient) Recv() (*GetFrame, error) {
 // Server API for Portal service
 
 type PortalServer interface {
-	// Sender
-	SendSession(*SessionRequest, Portal_SendSessionServer) error
 	Put(Portal_PutServer) error
-	// Client
-	ReceiveSession(*SessionRequest, Portal_ReceiveSessionServer) error
 	Get(*GetRequest, Portal_GetServer) error
 }
 
@@ -569,33 +257,12 @@ func RegisterPortalServer(s *grpc.Server, srv PortalServer) {
 	s.RegisterService(&_Portal_serviceDesc, srv)
 }
 
-func _Portal_SendSession_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(SessionRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(PortalServer).SendSession(m, &portalSendSessionServer{stream})
-}
-
-type Portal_SendSessionServer interface {
-	Send(*SendSessionState) error
-	grpc.ServerStream
-}
-
-type portalSendSessionServer struct {
-	grpc.ServerStream
-}
-
-func (x *portalSendSessionServer) Send(m *SendSessionState) error {
-	return x.ServerStream.SendMsg(m)
-}
-
 func _Portal_Put_Handler(srv interface{}, stream grpc.ServerStream) error {
 	return srv.(PortalServer).Put(&portalPutServer{stream})
 }
 
 type Portal_PutServer interface {
-	SendAndClose(*PutResponse) error
+	Send(*PutResponse) error
 	Recv() (*PutFrame, error)
 	grpc.ServerStream
 }
@@ -604,7 +271,7 @@ type portalPutServer struct {
 	grpc.ServerStream
 }
 
-func (x *portalPutServer) SendAndClose(m *PutResponse) error {
+func (x *portalPutServer) Send(m *PutResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -614,27 +281,6 @@ func (x *portalPutServer) Recv() (*PutFrame, error) {
 		return nil, err
 	}
 	return m, nil
-}
-
-func _Portal_ReceiveSession_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(SessionRequest)
-	if err := stream.RecvMsg(m); err != nil {
-		return err
-	}
-	return srv.(PortalServer).ReceiveSession(m, &portalReceiveSessionServer{stream})
-}
-
-type Portal_ReceiveSessionServer interface {
-	Send(*ReceiveSessionState) error
-	grpc.ServerStream
-}
-
-type portalReceiveSessionServer struct {
-	grpc.ServerStream
-}
-
-func (x *portalReceiveSessionServer) Send(m *ReceiveSessionState) error {
-	return x.ServerStream.SendMsg(m)
 }
 
 func _Portal_Get_Handler(srv interface{}, stream grpc.ServerStream) error {
@@ -664,19 +310,10 @@ var _Portal_serviceDesc = grpc.ServiceDesc{
 	Methods:     []grpc.MethodDesc{},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "SendSession",
-			Handler:       _Portal_SendSession_Handler,
-			ServerStreams: true,
-		},
-		{
 			StreamName:    "Put",
 			Handler:       _Portal_Put_Handler,
-			ClientStreams: true,
-		},
-		{
-			StreamName:    "ReceiveSession",
-			Handler:       _Portal_ReceiveSession_Handler,
 			ServerStreams: true,
+			ClientStreams: true,
 		},
 		{
 			StreamName:    "Get",
@@ -687,40 +324,30 @@ var _Portal_serviceDesc = grpc.ServiceDesc{
 }
 
 var fileDescriptor0 = []byte{
-	// 546 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x94, 0x53, 0xdd, 0x6e, 0xda, 0x4c,
-	0x10, 0x8d, 0xb1, 0xe1, 0x33, 0x43, 0x82, 0xfc, 0x4d, 0xaa, 0x08, 0xd1, 0x5e, 0x44, 0x96, 0xaa,
-	0x22, 0x14, 0x91, 0x88, 0x37, 0x40, 0xc6, 0x69, 0x50, 0x25, 0x84, 0x16, 0xda, 0xaa, 0x97, 0x16,
-	0x4c, 0x1a, 0x2b, 0xf1, 0x4f, 0xed, 0xa5, 0x4a, 0x7b, 0xdb, 0x57, 0xea, 0xdb, 0xf5, 0xa6, 0xde,
-	0x61, 0x31, 0x76, 0xd4, 0x48, 0xed, 0xdd, 0xfc, 0x9c, 0x9d, 0x39, 0x33, 0x67, 0x16, 0x9c, 0x20,
-	0x0d, 0x2f, 0xd3, 0x24, 0x93, 0xc1, 0xc3, 0x28, 0xcd, 0x12, 0x99, 0x60, 0x6b, 0xe7, 0xb9, 0x9f,
-	0xa1, 0xbb, 0xa4, 0x3c, 0x0f, 0x93, 0x58, 0xd0, 0x97, 0x2d, 0xe5, 0x12, 0xdf, 0x80, 0x25, 0xbf,
-	0xa5, 0xd4, 0x33, 0xce, 0x8d, 0x41, 0x77, 0x7c, 0x3a, 0xd2, 0xcf, 0x34, 0x6a, 0x55, 0xa4, 0x04,
-	0x03, 0xf0, 0x0c, 0x5a, 0x39, 0xad, 0x33, 0x92, 0xbd, 0x46, 0x01, 0x6d, 0x0b, 0xed, 0xe1, 0x0b,
-	0x68, 0xca, 0xe4, 0x9e, 0xe2, 0x9e, 0xc9, 0xe1, 0x9d, 0xe3, 0xfe, 0x34, 0xc0, 0x59, 0x52, 0xbc,
-	0xd1, 0x75, 0x96, 0x32, 0x90, 0x84, 0x23, 0x68, 0xe6, 0xca, 0xd0, 0xcd, 0x7a, 0x4f, 0x9a, 0x31,
-	0x88, 0x3b, 0xee, 0x60, 0x87, 0xd2, 0x8d, 0x4a, 0x69, 0xec, 0x83, 0x9d, 0x51, 0x94, 0x48, 0x9a,
-	0x2d, 0x74, 0xcf, 0xd2, 0xc7, 0x57, 0xd0, 0x5e, 0xdf, 0x6d, 0xe3, 0xfb, 0x65, 0xf8, 0x9d, 0x7a,
-	0x56, 0x91, 0x6c, 0x8a, 0x43, 0x00, 0xcf, 0xa1, 0x13, 0x05, 0x8f, 0xd7, 0xe1, 0x03, 0x71, 0xbe,
-	0xc9, 0xf9, 0x6a, 0xc8, 0x7d, 0x04, 0x5b, 0xd9, 0xb3, 0xf8, 0x36, 0x41, 0x04, 0x2b, 0x0d, 0xe4,
-	0x1d, 0x93, 0x6d, 0x0b, 0xb6, 0x55, 0x2c, 0x57, 0x4f, 0x15, 0x21, 0x53, 0xb0, 0xad, 0x62, 0x51,
-	0xb2, 0x21, 0xe6, 0x72, 0x22, 0xd8, 0x56, 0x1c, 0xa3, 0x30, 0x22, 0xde, 0xac, 0xb5, 0xe3, 0xb8,
-	0xf7, 0xd5, 0x54, 0x61, 0x3e, 0x0d, 0x33, 0xee, 0x6f, 0x8b, 0x9d, 0xe3, 0xe6, 0x60, 0x2f, 0xb6,
-	0xf2, 0x3a, 0x0b, 0x22, 0xc2, 0xd7, 0x35, 0x4d, 0xfe, 0xdf, 0xaf, 0x89, 0x93, 0x15, 0x45, 0x2e,
-	0xc0, 0xbe, 0xd5, 0x64, 0x99, 0x50, 0x67, 0xec, 0x94, 0x50, 0x1d, 0x17, 0x25, 0x42, 0xd1, 0xdc,
-	0x04, 0x32, 0x60, 0x9a, 0xc7, 0x82, 0x6d, 0xf7, 0x04, 0x3a, 0x45, 0x53, 0x41, 0x79, 0x9a, 0xc4,
-	0x39, 0xb9, 0x1e, 0x9c, 0x0a, 0x5a, 0x53, 0xf8, 0x95, 0x6a, 0xb2, 0x5d, 0xd4, 0xe8, 0x3c, 0xaf,
-	0x1a, 0xa3, 0xdc, 0x63, 0x80, 0xb7, 0x24, 0xf5, 0x79, 0xb9, 0x3f, 0x0c, 0xb0, 0x0b, 0xf7, 0x9f,
-	0xe6, 0xea, 0x42, 0x23, 0xdc, 0xe8, 0x15, 0x17, 0x56, 0x6d, 0x4e, 0xf3, 0xaf, 0xe7, 0xb4, 0x0e,
-	0x73, 0x0e, 0x07, 0xea, 0x18, 0xeb, 0x6c, 0xd1, 0x06, 0xeb, 0xe3, 0x64, 0xb6, 0x72, 0x8e, 0x10,
-	0xa0, 0x35, 0xf1, 0x56, 0xb3, 0x0f, 0xbe, 0x63, 0x0c, 0x47, 0xd0, 0xa9, 0x9c, 0xbe, 0x02, 0x2d,
-	0xfd, 0xf9, 0xd4, 0x31, 0xd8, 0xfa, 0x34, 0xf7, 0x9c, 0x06, 0x76, 0xe0, 0x3f, 0xe1, 0x7b, 0xbe,
-	0xc2, 0x9b, 0x43, 0x17, 0xda, 0x25, 0x7d, 0x55, 0xe8, 0xc6, 0x9f, 0x4c, 0x7d, 0x51, 0x14, 0x6d,
-	0x43, 0xd3, 0xbb, 0x79, 0x3f, 0x7f, 0xe7, 0x18, 0xe3, 0x5f, 0x06, 0xb4, 0x16, 0xcc, 0x17, 0x3d,
-	0x55, 0xbe, 0xfc, 0x15, 0x78, 0xf6, 0x64, 0x97, 0x7a, 0x6b, 0xfd, 0xca, 0x8e, 0xeb, 0x5f, 0xc8,
-	0x3d, 0xba, 0x32, 0xf0, 0x0a, 0xcc, 0x42, 0x35, 0x2c, 0x97, 0xb0, 0xbf, 0x9b, 0xfe, 0x69, 0x25,
-	0x52, 0x8a, 0x7a, 0x34, 0x30, 0x70, 0x06, 0xdd, 0xba, 0xb0, 0xcf, 0x76, 0x7e, 0xb9, 0x8f, 0xff,
-	0xe1, 0x10, 0xb8, 0xf9, 0x25, 0x98, 0x85, 0x9e, 0x88, 0x7b, 0xdc, 0x41, 0xeb, 0xbe, 0x53, 0x89,
-	0x31, 0x21, 0xf5, 0xe0, 0x77, 0x00, 0x00, 0x00, 0xff, 0xff, 0x7b, 0xe6, 0x40, 0xd3, 0x8d, 0x04,
-	0x00, 0x00,
+	// 388 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xc4, 0x92, 0xdd, 0x6a, 0xe2, 0x40,
+	0x14, 0xc7, 0x1d, 0x13, 0x43, 0x72, 0xdc, 0x95, 0xec, 0xec, 0x5e, 0x04, 0xaf, 0x96, 0x81, 0x05,
+	0x91, 0x45, 0x25, 0xfb, 0x04, 0xe2, 0xc7, 0x1a, 0x16, 0x16, 0x19, 0x6d, 0x7b, 0x9d, 0xe2, 0x48,
+	0x87, 0x9a, 0x4c, 0x9a, 0x8c, 0xd0, 0xf6, 0xb6, 0x2f, 0xde, 0xc9, 0x31, 0x89, 0xa1, 0x2f, 0xd0,
+	0xbb, 0x73, 0xfe, 0xe7, 0xeb, 0x97, 0x7f, 0x06, 0xfc, 0x38, 0x93, 0xd3, 0x4c, 0xe5, 0x3a, 0x3e,
+	0x4d, 0xb2, 0x5c, 0x69, 0x45, 0x9d, 0x4b, 0xc6, 0x9e, 0xc1, 0x5d, 0xcb, 0x93, 0x88, 0xd2, 0xa3,
+	0xa2, 0x14, 0xec, 0x2c, 0xd6, 0x0f, 0x01, 0xf9, 0x49, 0x46, 0x1e, 0xc7, 0xb8, 0xd4, 0x0a, 0xf9,
+	0x2a, 0x82, 0xae, 0xd1, 0x2c, 0x8e, 0x71, 0xa9, 0x25, 0xea, 0x20, 0x02, 0xcb, 0x68, 0x5f, 0x39,
+	0xc6, 0x74, 0x08, 0x6e, 0x22, 0x13, 0xa1, 0x5f, 0x32, 0x11, 0xd8, 0x38, 0xdf, 0xe4, 0xf4, 0x07,
+	0xf4, 0x64, 0xb1, 0x94, 0x79, 0xd0, 0x33, 0x05, 0x97, 0x5f, 0x12, 0xf6, 0x46, 0xc0, 0xdd, 0x9e,
+	0xf5, 0x3a, 0x8f, 0x13, 0x41, 0x7f, 0x81, 0x8d, 0xa3, 0xe5, 0xe9, 0x41, 0xf8, 0x6d, 0x52, 0xb1,
+	0x62, 0x71, 0x6f, 0x0a, 0x1c, 0xcb, 0x74, 0x00, 0x5d, 0x79, 0xa8, 0x58, 0x4c, 0x44, 0x7f, 0x83,
+	0x7b, 0xac, 0xe8, 0x91, 0xa6, 0x1f, 0xfa, 0xcd, 0x68, 0xa5, 0xf3, 0xa6, 0xa3, 0xe4, 0x3e, 0xc4,
+	0x3a, 0x46, 0xbe, 0x2f, 0x1c, 0x63, 0x96, 0x40, 0xdf, 0x40, 0x70, 0x51, 0x64, 0x2a, 0x2d, 0x84,
+	0x59, 0xd8, 0xe6, 0x08, 0xea, 0x65, 0x3b, 0x51, 0x14, 0x52, 0xa5, 0x3b, 0x1d, 0xeb, 0x36, 0x8e,
+	0xf9, 0x30, 0xad, 0x1e, 0x45, 0x8a, 0x44, 0x1e, 0xbf, 0x24, 0xa5, 0x15, 0xb9, 0x48, 0x94, 0x16,
+	0xd1, 0x16, 0xa1, 0x8c, 0x15, 0x75, 0xce, 0x18, 0xc0, 0x5f, 0x61, 0xce, 0x3d, 0x9d, 0x45, 0xa1,
+	0xaf, 0xf3, 0xa4, 0x35, 0x8f, 0xc6, 0x98, 0xa6, 0xcf, 0x35, 0x66, 0x3c, 0x02, 0xff, 0xe3, 0x57,
+	0x53, 0x17, 0xec, 0xbb, 0x79, 0xb4, 0xf7, 0x3b, 0x14, 0xc0, 0x99, 0x2f, 0xf6, 0xd1, 0xed, 0xca,
+	0x27, 0x63, 0x06, 0x5e, 0x83, 0x53, 0x16, 0x36, 0xab, 0xf9, 0x72, 0xc5, 0x4d, 0x93, 0x07, 0xbd,
+	0xc5, 0xe6, 0xe6, 0xff, 0x3f, 0x9f, 0x84, 0x09, 0x38, 0x5b, 0x3c, 0x4f, 0x43, 0xb0, 0x8c, 0xe1,
+	0xb4, 0xc1, 0xa9, 0x9f, 0xc0, 0xf0, 0x7b, 0x4b, 0xa9, 0xff, 0x07, 0xeb, 0x8c, 0xc8, 0x8c, 0xd0,
+	0x29, 0x58, 0xc6, 0x10, 0x4a, 0xeb, 0x8e, 0xab, 0x85, 0x43, 0xbf, 0xa5, 0xe1, 0x1e, 0xd6, 0x99,
+	0x91, 0x7b, 0x07, 0x1f, 0xf9, 0x9f, 0xf7, 0x00, 0x00, 0x00, 0xff, 0xff, 0x61, 0x8d, 0x7b, 0x91,
+	0xf8, 0x02, 0x00, 0x00,
 }
