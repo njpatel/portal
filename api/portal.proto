@@ -3,19 +3,22 @@ syntax = "proto3";
 package portal;
 
 service Portal {
-  rpc Put(stream PutFrame) returns (stream PutResponse) {}
-  rpc Get(GetRequest) returns (stream GetFrame) {}
+  rpc Put(stream Frame) returns (stream PutResponse) {}
+  rpc Get(GetRequest) returns (stream Frame) {}
 }
 
 enum SessionStateType {
-  WAIT   = 0;
-  ACTIVE = 1;
+  UNKNOWN  = 0;
+  WAIT     = 1;
+  ACTIVE   = 2;
+  CANCEL   = 3;
 }
 
 enum FrameType {
-  BEGIN  = 0
-  HEADER = 1;
-  CHUNK  = 2;
+  PING   = 0;
+  BEGIN  = 1;
+  HEADER = 2;
+  CHUNK  = 3;
 }
 
 message FileInfo {
@@ -26,7 +29,7 @@ message FileInfo {
   bool   isDir    = 5;
 }
 
-message PutFrame {
+message Frame {
   FrameType type = 1;
 
   // type != BEGIN
@@ -46,21 +49,12 @@ message PutResponse {
   string token = 2;
 
   // type = ACTIVE
-  string remoteIP = 3;
+  string receiverIP = 3;
+
+  // type = CANCEL
+  string reason = 4;
 }
 
 message GetRequest {
   string token = 1;
 }
-
-message GetFrame {
-  FrameType type = 1;
-  int64     id   = 2;
-
-  // type = HEADER
-  FileInfo fileInfo = 3;
-
-  // type = CHUNK
-  bytes data = 4;
-}
-

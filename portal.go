@@ -29,17 +29,10 @@ func main() {
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "address, a",
-			Value:       "portal.njp.io:3421",
+			Value:       "localhost:3421",
 			Usage:       "portal server address",
 			Destination: &address,
 			EnvVar:      "PORTAL_HOST",
-		},
-
-		cli.BoolFlag{
-			Name:        "force, f",
-			Usage:       "overwrite files",
-			Destination: &force,
-			EnvVar:      "PORTAL_FORCE",
 		},
 
 		cli.BoolFlag{
@@ -60,8 +53,8 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
-			Name:  "server",
-			Usage: "start the portal server",
+			Name:  "serve",
+			Usage: "Start the portal server",
 			Action: func(c *cli.Context) {
 				server.Run(&server.Config{
 					Address: address,
@@ -70,8 +63,9 @@ func main() {
 			},
 		},
 		{
-			Name:  "send",
-			Usage: "<file1> [file2] [file3]",
+			Name:      "send",
+			Usage:     "Send file(s) to another machine",
+			ArgsUsage: "<file1> [dir2] [file3]",
 			Action: func(c *cli.Context) {
 				send.Run(&send.Config{
 					Address:  address,
@@ -81,8 +75,9 @@ func main() {
 			},
 		},
 		{
-			Name:  "sync",
-			Usage: "<file1> [file2] [file3]",
+			Name:      "sync",
+			Usage:     "Send file(s) to another machine, and keep them in sync",
+			ArgsUsage: "<file1> [dir2] [file3]",
 			Action: func(c *cli.Context) {
 				send.RunSync(&send.Config{
 					Address:  address,
@@ -92,9 +87,18 @@ func main() {
 			},
 		},
 		{
-			Name:    "receive",
-			Aliases: []string{"get"},
-			Usage:   "<token> <output dir=./>",
+			Name:      "receive",
+			Aliases:   []string{"get"},
+			Usage:     "Receive files from another machine",
+			ArgsUsage: "<token> <output dir=./>",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:        "force, f",
+					Usage:       "overwrite files",
+					Destination: &force,
+					EnvVar:      "PORTAL_FORCE",
+				},
+			},
 			Action: func(c *cli.Context) {
 				receive.Run(&receive.Config{
 					Address:  address,
